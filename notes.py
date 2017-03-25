@@ -10,8 +10,12 @@ def main():
 	usage = "usage: %prog [options] note_content"
 	description=' Simple project notes manager.'
 	parser = OptionParser(usage=usage, description=description)
-	parser.add_option("-i","--install", action="store_true", dest="install", help="copy script to the /usr/local/bin dir")
-	parser.add_option("-d","--date", action="store_true", dest="date", help="add date of creation at the end of the note_content")
+	parser.add_option("-i","--install", action="store_true", dest="install",
+		help="copy script to the /usr/local/bin dir")
+	parser.add_option("-d","--date", action="store_true", dest="date",
+		help="add date of creation at the end of the note_content")
+	parser.add_option("-s","--show", action="store_true", dest="show",
+		help="print the contents of the .notes file")
 
 
 	options, args = parser.parse_args()
@@ -22,6 +26,7 @@ def main():
 
 	file = '.notes/'+args[0]
 	note_text = "- [ ] "+' '.join(args[1:])
+
 	if options.date:
 		note_text += '\t// added '+datetime.now().strftime('%d.%m.%Y at %H:%M')
 	note_text += '\n\n'
@@ -41,6 +46,9 @@ def main():
 
 	with open(file,"a+") as f:
 		f.write(note_text)
+
+	if options.show:
+		os.system("cat {}".format(file))
 
 if __name__ == '__main__':
 	main()
