@@ -1,4 +1,4 @@
-#!/Users/Tadeo/anaconda/bin/python
+#!/usr/bin/env python
 
 from datetime import datetime
 import os
