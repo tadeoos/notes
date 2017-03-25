@@ -12,14 +12,9 @@ def main():
 	args = sys.argv[1:]
 
 	file = '.notes/'+args[0]
-	note_text = "- "+' '.join(args[1:])+'\t// added '+datetime.now().strftime('%d.%m.%Y at %H:%M')+'\n\n'
+	note_text = "- [ ] "+' '.join(args[1:])+'\t// added '+datetime.now().strftime('%d.%m.%Y at %H:%M')+'\n\n'
 
-	try:
-		os.mkdir('.notes')
-		with open(file,"w") as f:
-			f.write('# NOTES\n\n')
-	except FileExistsError:
-		pass
+	os.makedirs('.notes', exist_ok=True)
 
 	short = [file for file in os.listdir('.notes') if file.startswith(args[0])]
 	try:
@@ -27,7 +22,7 @@ def main():
 		if len(short)==1:
 			file = '.notes/' + short[0]
 		else:
-			note_text = '# NOTES \n\n' + note_text
+			note_text = '# NOTES\n\n' + note_text
 	except AssertionError:
 		print('-ERROR-\nNote not saved: the name of the notes_file is ambigous.')
 		return
