@@ -23,5 +23,5 @@ This will create (or append if it exist) a `notes_file` in .notes directory with
 ```
 # NOTES
 
-- mail to admin   / (2017-03-25 00:55:54)
+- [ ] mail to admin   // added 25.03.2017 at 17:38
 ```
