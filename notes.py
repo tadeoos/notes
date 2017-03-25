@@ -7,20 +7,31 @@ import sys
 def main():
 	if sys.argv[1] == '-i':
 		os.system('cp notes.py /usr/local/bin/notes.py')
-		args = sys.argv[2:]
 		return
+
 	args = sys.argv[1:]
 
 	file = '.notes/'+args[0]
-	note_text = "- "+' '.join(args[1:])+'\t/ ('+datetime.now().strftime('%Y-%m-%d %H:%M:%S')+')\n\n'
+	note_text = "- "+' '.join(args[1:])+'\t// added '+datetime.now().strftime('%d.%m.%Y at %H:%M')+'\n\n'
 
-	# os.makedirs('.notes', exist_ok=True)
 	try:
 		os.mkdir('.notes')
 		with open(file,"w") as f:
 			f.write('# NOTES\n\n')
 	except FileExistsError:
 		pass
+
+	short = [file for file in os.listdir('.notes') if file.startswith(args[0])]
+	try:
+		assert(len(short)<2)
+		if len(short)==1:
+			file = '.notes/' + short[0]
+		else:
+			note_text = '# NOTES \n\n' + note_text
+	except AssertionError:
+		print('-ERROR-\nNote not saved: the name of the notes_file is ambigous.')
+		return
+
 	with open(file,"a+") as f:
 		f.write(note_text)
 
