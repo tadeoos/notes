@@ -16,7 +16,8 @@ def main():
 		help="add date of creation at the end of the note_content")
 	parser.add_option("-s","--show", action="store_true", dest="show",
 		help="print the contents of the .notes file")
-
+	parser.add_option("-f", "--file",
+                  action="store", type="string", dest="filename", default='.notes.md')
 
 	options, args = parser.parse_args()
 
@@ -24,12 +25,12 @@ def main():
 		os.system('cp notes.py /usr/local/bin/notes.py')
 		return True
 
-	file = '.notes/'+args[0]
-	note_text = "- [ ] "+' '.join(args[1:])
+	if options.filename:
+		print('yo, filename')
+		file = options.filename+'/'+args[0]
 
-	if options.date:
-		note_text += '\t// added '+datetime.now().strftime('%d.%m.%Y at %H:%M')
-	note_text += '\n\n'
+	add_date = '\t// '+datetime.now().strftime('%d.%m.%Y at %H:%M') if options.date else ''
+	note_text = "- [ ] "+' '.join(args[1:]) + add_date + '\n\n'
 
 	os.makedirs('.notes', exist_ok=True)
 
@@ -44,7 +45,7 @@ def main():
 		print('-ERROR-\nNote not saved: the name of the notes_file is ambigous.')
 		return
 
-	with open(file,"a+") as f:
+	with open(file, "a+") as f:
 		f.write(note_text)
 
 	if options.show:
