@@ -17,7 +17,11 @@ def main():
 	parser.add_option("-s","--show", action="store_true", dest="show",
 		help="print the contents of the .notes file")
 	parser.add_option("-f", "--file",
-                  action="store", type="string", dest="filename", default='.notes.md')
+                  action="store", type="string", dest="filename", default='.notes.md',
+                  help="specify the name of the notes_file, default is '.notes.md'")
+	parser.add_option("-t", "--title",
+                  action="store", type="string", dest="title", default='# NOTES',
+                  help="specify the first line of a new notes_file, deafult is '# NOTES'")
 
 	options, args = parser.parse_args()
 
@@ -25,28 +29,31 @@ def main():
 		os.system('cp notes.py /usr/local/bin/notes.py')
 		return True
 
-	if options.filename:
-		print('yo, filename')
-		file = options.filename+'/'+args[0]
+	# if options.filename:
+	# 	print('yo, filename')
+	# 	file = options.filename+'/'+args[0]
+	file = options.filename
+	if len(args)>0:
+		check_if_first = options.filename not in os.listdir('.')
+		add_title = options.title+'\n\n' if check_if_first else ''
+		add_date = '\t// '+datetime.now().strftime('%d.%m.%Y at %H:%M') if options.date else ''
+		note_text = add_title+"- [ ] "+' '.join(args) + add_date + '\n\n'
 
-	add_date = '\t// '+datetime.now().strftime('%d.%m.%Y at %H:%M') if options.date else ''
-	note_text = "- [ ] "+' '.join(args[1:]) + add_date + '\n\n'
 
-	os.makedirs('.notes', exist_ok=True)
-
-	short = [file for file in os.listdir('.notes') if file.startswith(args[0])]
-	try:
-		assert(len(short)<2)
-		if len(short)==1:
-			file = '.notes/' + short[0]
-		else:
-			note_text = '# NOTES\n\n' + note_text
-	except AssertionError:
-		print('-ERROR-\nNote not saved: the name of the notes_file is ambigous.')
-		return
-
-	with open(file, "a+") as f:
-		f.write(note_text)
+		with open(file, "a+") as f:
+			f.write(note_text)
+	# os.makedirs('.notes', exist_ok=True)
+	# short = [file for file in os.listdir('.notes') if file.startswith(args[0])]
+	
+	# try:
+	# 	assert(len(short)<2)
+	# 	if len(short)==1:
+	# 		file = '.notes/' + short[0]
+	# 	else:
+	# 		note_text = '# NOTES\n\n' + note_text
+	# except AssertionError:
+	# 	print('-ERROR-\nNote not saved: the name of the notes_file is ambigous.')
+	# 	return
 
 	if options.show:
 		os.system("cat {}".format(file))
