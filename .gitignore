@@ -69,4 +69,5 @@ docs/_build/
 .venv
 venv/
 ENV/
-.notes.md
+
+.notes*
