@@ -5,6 +5,7 @@ from optparse import OptionParser
 import os
 import sys
 
+
 def main():
 
 	usage = "usage: %prog [options] note_content"
@@ -17,11 +18,11 @@ def main():
 	parser.add_option("-s","--show", action="store_true", dest="show",
 		help="print the contents of the .notes file")
 	parser.add_option("-f", "--file",
-                  action="store", type="string", dest="filename", default='.notes.md',
-                  help="specify the name of the notes_file, default is '.notes.md'")
+				  action="store", type="string", dest="filename", default='.notes.md',
+				  help="specify the name of the notes_file, default is '.notes.md'")
 	parser.add_option("-t", "--title",
-                  action="store", type="string", dest="title", default='# NOTES',
-                  help="specify the first line of a new notes_file, deafult is '# NOTES'")
+				  action="store", type="string", dest="title", default='# NOTES',
+				  help="specify the first line of a new notes_file, deafult is '# NOTES'")
 
 	options, args = parser.parse_args()
 
@@ -30,6 +31,15 @@ def main():
 		return True
 
 	file = options.filename
+
+	if os.path.exists('.gitignore'):
+		if file not in open('.gitignore').read():
+			with open('.gitignore', 'a') as gitignore:
+				gitignore.write('\n{}\n'.format(file))
+			
+
+	
+
 	if len(args)>0:
 		check_if_first = options.filename not in os.listdir('.')
 		add_title = options.title+'\n\n' if check_if_first else ''
